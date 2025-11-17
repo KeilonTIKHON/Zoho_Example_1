@@ -1,0 +1,56 @@
+void automation.procLead(String id)
+{
+lead = zoho.crm.getRecordById("Leads",input.id);
+if(lead.get("Lead_Status") == "New")
+{
+	contactMap = Map();
+	contactMap.put("Last_Name",lead.get("Last_Name"));
+	contactMap.put("Email",lead.get("Email"));
+	existing = zoho.crm.searchRecords("Contacts","(Email:equals:" + lead.get("Email") + ")");
+	if(existing.isEmpty())
+	{
+		contact = zoho.crm.createRecord("Contacts",contactMap);
+		contactId = contact.get("id");
+	}
+	else
+	{
+		contactId = existing.get(0).get("id");
+	}
+	dealMap = Map();
+	dealMap.put("Deal_Name","Deal for " + lead.get("Last_Name"));
+	dealMap.put("Contact_Name",contactId);
+	dealMap.put("Stage","Qualification");
+	deal = zoho.crm.createRecord("Deals",dealMap);
+	logMap = Map();
+	logMap.put("Lead_ID",input.id);
+	logMap.put("Contact_ID",contactId);
+	logMap.put("Deal_ID",deal.get("id"));
+	logMap.put("Status","Processed");
+	zoho.crm.createRecord("Production_Log",logMap);
+	// Вебхук обратно в твой PHP
+	payload = Map();
+	payload.put("lead_id",input.id);
+	payload.put("status","processed");
+	payload.put("deal_id",deal.get("id"));
+	// Преобразуем Map в JSON-подобную строку
+	jsonPayload = payload.toString();
+	jsonPayload = jsonPayload.replaceAll("=",":");
+	jsonPayload = jsonPayload.replaceAll(" ","");
+	// invokeurl с JSON body и headers
+	resp = invokeurl
+	[
+		url :"https://wintrily-heterogeneous-lance.ngrok-free.dev/test/webhook_listener.php"
+		type :POST
+		body:jsonPayload
+		headers:{"Content-Type":"application/json"}
+	];
+	info resp;
+}
+else
+{
+	logMap = Map();
+	logMap.put("Lead_ID",input.id);
+	logMap.put("Status","Skipped");
+	zoho.crm.createRecord("Production_Log",logMap);
+}
+}
