@@ -27,16 +27,14 @@ if(lead.get("Lead_Status") == "New")
 	logMap.put("Deal_ID",deal.get("id"));
 	logMap.put("Status","Processed");
 	zoho.crm.createRecord("Production_Log",logMap);
-	// Вебхук обратно в твой PHP
+	
 	payload = Map();
 	payload.put("lead_id",input.id);
 	payload.put("status","processed");
 	payload.put("deal_id",deal.get("id"));
-	// Преобразуем Map в JSON-подобную строку
 	jsonPayload = payload.toString();
 	jsonPayload = jsonPayload.replaceAll("=",":");
 	jsonPayload = jsonPayload.replaceAll(" ","");
-	// invokeurl с JSON body и headers
 	resp = invokeurl
 	[
 		url :"https://wintrily-heterogeneous-lance.ngrok-free.dev/test/webhook_listener.php"

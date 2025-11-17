@@ -11,7 +11,7 @@ use com\zoho\crm\api\util\Choice;
 
 use Dotenv\Dotenv;
 
-// Загружаем .env
+//.env
 $dotenv = Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 $bodyWrapper = new BodyWrapper();
@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 try {
 
-    // Создаём новую запись Лида
+    
     $lead = new Record();
 
     $lead->addFieldValue(Leads::FirstName(), $_POST['First_Name'] ?? '');
@@ -29,11 +29,9 @@ try {
     $lead->addFieldValue(Leads::EMAIL(), $_POST['Email'] ?? '');
     $lead->addFieldValue(Leads::COMPANY(), $_POST['Company'] ?? 'Individual');
     $lead->addFieldValue(Leads::LeadStatus(), new Choice("New"));
-
-    // Неконвенционное поле (кастомное)
     $lead->addKeyValue("Webhook_URL", $_ENV['WEBHOOK_RETURN_URL']);
 
-    // Запрос
+    
     $records = [$lead];
     $recordOps = new RecordOperations();
     $bodyWrapper->setData($records);
