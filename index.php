@@ -1,15 +1,3 @@
-<?php
-require 'vendor/autoload.php';
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
-$dotenv->load();
-var_dump($_ENV);
-$client_id = $_ENV['CLIENT_ID'];
-$redirect_uri = $_ENV['REDIRECT_URI'];
-$scope = 'ZohoCRM.modules.ALL,ZohoCRM.settings.ALL';
-$accounts_url = $_ENV['ACCOUNTS_URL'];
-
-$auth_url = "$accounts_url/oauth/v2/auth?scope=$scope&client_id=$client_id&response_type=code&access_type=offline&redirect_uri=$redirect_uri";
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

@@ -1,2 +1,5 @@
 /vendor
 .env
+/webhook_log.txt
+/sdk_logs.log
+/tokens/

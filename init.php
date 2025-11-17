@@ -2,7 +2,7 @@
 require_once __DIR__ . '/vendor/autoload.php';
 
 use Dotenv\Dotenv;
-use com\zoho\crm\api\dc\USDataCenter;
+use com\zoho\crm\api\dc\EUDataCenter;
 use com\zoho\crm\api\InitializeBuilder;
 use com\zoho\api\authenticator\OAuthBuilder;
 use com\zoho\api\authenticator\store\FileStore;
@@ -26,12 +26,10 @@ $token = (new OAuthBuilder())
     ->build();
 
 // Инициализация SDK
-$environment = USDataCenter::PRODUCTION();
+$environment = EUDataCenter::PRODUCTION();
 (new InitializeBuilder())
     ->user($user)       // <--- обязательное исправление
     ->environment($environment)
     ->token($token)
     ->store($store)
     ->initialize();
-
-    
